@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>심리 테스트 (서브 타이틀 위치 조정)</title>
+    <style>
+        /*
+         * =================================================================
+         * 🚨 폰트 정의: SUIT (메인), HGGGothicssi (타이틀)
+         * =================================================================
+         */
+        
+        /* -------------------------- HGGGothicssi 폰트 정의 -------------------------- */
+        @font-face {
+            font-family: 'HGGGothicssi';
+            src: url('HGGGothicssi_99g.ttf') format('truetype'); 
+            font-weight: 900; 
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'HGGGothicssi';
+            src: url('HGGGothicssi_80g.ttf') format('truetype'); 
+            font-weight: 800; /* 메인 타이틀에 사용 */
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'HGGGothicssi';
+            src: url('HGGGothicssi_40g.ttf') format('truetype'); 
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* -------------------------- SUIT 폰트 정의 (메인 바디/박스) -------------------------- */
+        @font-face {
+            font-family: 'SUIT';
+            src: url('SUIT-ExtraLight.ttf') format('truetype'); 
+            font-weight: 200; 
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SUIT';
+            src: url('SUIT-Light.ttf') format('truetype'); 
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SUIT';
+            src: url('SUIT-Regular.ttf') format('truetype'); 
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SUIT';
+            src: url('SUIT-Bold.ttf') format('truetype'); 
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SUIT';
+            src: url('SUIT-ExtraBold.ttf') format('truetype'); 
+            font-weight: 800;
+            font-style: normal;
+        }
+
+        /* ---------------------------------------------------- */
+
+        :root {
+            --device-width: 375px;
+            --topbar-height: 94px; 
+            --bottombar-height: 83px; 
+            --start-button-size: 160px; 
+            --font-family-main: 'SUIT', 'HGGGothicssi', -apple-system, sans-serif;
+            --main-text-color: #161317;
+            --sub-text-color: #535353;
+            
+            /* 점선 색상 */
+            --vertical-line-color: #666; 
+            --horizontal-line-color: #888; 
+        }
+
+        body {
+            width: var(--device-width);
+            height: 813px;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+            font-family: var(--font-family-main); 
+            box-sizing: border-box;
+        }
+
+        .screen-container {
+            position: relative;
+            width: 100%; height: 100%; 
+            background-image: url('Topbar.jpg'); 
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            background-color: #FDFDFD; 
+        }
+        
+        .main-content {
+            position: absolute;
+            top: var(--topbar-height); 
+            left: 0; width: 100%; 
+            height: calc(100% - var(--topbar-height) - var(--bottombar-height)); 
+            background-color: transparent; 
+            box-sizing: border-box;
+        }
+
+        /* ------------------------- 텍스트 영역 ------------------------- */
+        .header-text {
+            position: absolute;
+            width: calc(100% - 86px); left: 50%; transform: translateX(-50%);
+            top: 35px; 
+            text-align: center;
+            z-index: 5;
+        }
+
+        .main-title { 
+            font-family: 'HGGGothicssi', sans-serif; 
+            font-size: 28px; 
+            font-weight: 800; 
+            /* 자간 -5% 적용 */
+            letter-spacing: -0.05em; 
+            /* 🚨 서브 타이틀 5px 상향 조정을 위해 margin-bottom 감소 (15px -> 10px) */
+            margin-bottom: 10px; 
+            color: var(--main-text-color); 
+        }
+        .sub-text { 
+            font-size: 12px; 
+            font-weight: 300; 
+            line-height: 17px; 
+            color: var(--main-text-color); 
+        }
+
+        /* ------------------------- 중앙 점선 및 START 버튼 ------------------------- */
+
+        .start-button {
+            position: absolute;
+            width: var(--start-button-size); 
+            height: var(--start-button-size);
+            top: 250px; 
+            left: 50%; transform: translateX(-50%);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10;
+        }
+        
+        .start-button img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 1; }
+        .start-button span { 
+            position: relative; 
+            z-index: 2; 
+            color: #FDFDFD; 
+            font-size: 14px; 
+            font-weight: 800; 
+        }
+
+        /* 가로 점선 */
+        .dashed-line-container.horizontal {
+            position: absolute;
+            width: 100%; height: 1px; z-index: 1;
+            top: 330px; 
+            transform: translateY(-50%); 
+            background-image: linear-gradient(to right, var(--horizontal-line-color) 33%, transparent 33%);
+            background-size: 6px 100%; 
+            background-repeat: repeat-x;
+        }
+        
+        /* 세로 점선 */
+        .dashed-line-container.vertical {
+            position: absolute;
+            left: 50%; transform: translateX(-50%);
+            top: 138px; 
+            height: 357px; 
+            width: 1px;
+            z-index: 1;
+            background-image: linear-gradient(to bottom, var(--vertical-line-color) 33%, transparent 33%);
+            background-size: 100% 6px; 
+            background-repeat: repeat-y;
+        }
+        
+        /* ------------------------- 하단 정보 박스 ------------------------- */
+        .info-box-container {
+            position: absolute;
+            width: 336px;
+            top: 510px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 5; 
+        }
+
+        .info-box {
+            width: 100%;
+            padding: 8px 20px; 
+            border: 0.5px solid var(--main-text-color);
+            box-sizing: border-box;
+            display: flex; flex-direction: column; align-items: center; 
+            gap: 4px; 
+        }
+
+        .question-count { 
+            font-size: 14px; 
+            font-weight: 700; 
+            line-height: 17.25px; 
+            color: var(--main-text-color); 
+        }
+        .options-text { 
+            font-size: 10px; 
+            font-weight: 300; 
+            line-height: 17.25px; 
+            color: var(--main-text-color); 
+        }
+
+        /* ------------------------- 안내 문구 ------------------------- */
+        .guidance-text {
+            position: absolute;
+            width: calc(100% - 40px * 2); left: 50%; transform: translateX(-50%);
+            top: 580px; 
+            text-align: center;
+            z-index: 5;
+        }
+        
+        .guidance-text div { 
+            font-size: 9px; 
+            font-weight: 200; 
+            line-height: 13px; 
+            color: var(--sub-text-color); 
+            letter-spacing: -0.02em; 
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="screen-container">
+        
+        <div class="main-content">
+            
+            <div class="dashed-line-container vertical"></div>
+            <div class="dashed-line-container horizontal"></div> 
+
+            <div class="header-text">
+                <div class="main-title">나는 뭘 까 먹었을까?</div>
+                <div class="sub-text">
+                    오늘도 비밀번호를 까먹었나요, 아니면 약속을 까먹었나요?<br>테스트하고 당신의 까모 유형을 찾아보세요!
+                </div>
+            </div>
+
+            <div class="start-button">
+                <img src="Vector.png" alt="START 버튼 마름모 모양"> 
+                <span>START</span>
+            </div>
+
+            <div class="info-box-container">
+                <div class="info-box">
+                    <div class="question-count">총 32문항 (4개 원인 X 8문항) </div>
+                    <div class="options-text">전혀 아니다 (0) / 가끔 그렇다 (1) / 자주 그렇다 (2) / 항상 그렇다 (3) </div>
+                </div>
+            </div>
+            
+            <div class="guidance-text">
+                <div>
+                    본 검사는 간이 스크리닝 도구로, 정확한 의학적 진단을 대체하지 않습니다.<br/>권장 제품은 일반적 연구 결과를 참고했으나, 개인별 맞춤 상담이 필요할 수 있습니다.
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
