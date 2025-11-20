@@ -341,7 +341,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // 질문 ID에 따른 선택 버튼 색상 매핑 (Q6/Q7 교환 반영됨)
+            // 질문 ID에 따른 선택 버튼 색상 매핑
             const colorMap = {
                 'Q1': '노란', 'Q5': '노란',
                 'Q2': '보라', 
@@ -352,10 +352,10 @@
             };
 
             // 1. 색상별 점수 변수 초기화
-            let Yellow = 0; // 노란 버튼 점수 합산 변수 (Q1, Q5)
-            let Purple = 0; // 보라 버튼 점수 합산 변수 (Q2, Q7)
-            let Pink = 0;   // 핑크 버튼 점수 합산 변수 (Q3, Q6)
-            let Green = 0;  // 초록 버튼 점수 합산 변수 (Q4, Q8)
+            let Yellow = 0; 
+            let Purple = 0; 
+            let Pink = 0;   
+            let Green = 0;  
 
             // answers 객체: 각 질문 ID에 대해 선택된 점수(value)를 문자열로 저장
             const answers = {}; 
@@ -363,17 +363,14 @@
             const options = document.querySelectorAll('.options-item');
             
             // 2. 점수 재계산 및 업데이트 함수 정의
-            // 이 함수는 answers 객체에 저장된 최종 점수만 합산하므로, 중복 누적을 방지합니다.
             function calculateTotalScores() {
-                // 매번 계산 시 변수를 0으로 초기화
                 Yellow = 0;
                 Purple = 0;
                 Pink = 0;
                 Green = 0;
 
-                // answers 객체를 순회하며 점수를 합산
                 for (const qId in answers) {
-                    const score = parseInt(answers[qId], 10); // 문자열 점수를 숫자로 변환
+                    const score = parseInt(answers[qId], 10); 
                     const color = colorMap[qId];
 
                     if (color === '노란') Yellow += score;
@@ -434,21 +431,31 @@
                 });
             });
             
-            // =========================================================================
-            // 4. 이벤트 핸들러: "<" 아이콘 클릭 시 (추가된 부분)
-            // =========================================================================
+            // 4. 이벤트 핸들러: "<" 아이콘 클릭 시
             const navIcon = document.querySelector('.nav-icon');
             navIcon.addEventListener('click', () => {
-                // index.html로 페이지 이동
                 window.location.href = 'index.html';
             });
-            // =========================================================================
 
 
-            // "다음 단계" 버튼 클릭 이벤트
+            // "다음 단계" 버튼 클릭 이벤트 (⭐ 유효성 검사 로직 추가됨)
             const submitButton = document.querySelector('.submit-button');
             submitButton.addEventListener('click', () => {
-                // 최종 점수 확인 및 로컬 스토리지 저장
+                
+                // =========================================================================
+                // 💡 유효성 검사 로직
+                // =========================================================================
+                const totalQuestions = 8;
+                const answeredQuestions = Object.keys(answers).length;
+
+                // answers 객체의 키 개수가 8개가 아니면 유효성 검사 실패
+                if (answeredQuestions !== totalQuestions) {
+                    alert('모든 문항에 체크해야 합니다.');
+                    return; // 🚨 여기서 함수 실행을 중단하여 페이지 이동을 막습니다.
+                }
+                // =========================================================================
+
+                // 유효성 검사 통과 시: 최종 점수 확인 및 로컬 스토리지 저장
                 calculateTotalScores();
                 
                 const finalScores = {
