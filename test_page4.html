@@ -3,245 +3,484 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>결과 페이지 - 막대 그래프 오버레이</title>
+    <title>심리 테스트 - 설문 페이지 4 (SVG 버튼 적용)</title>
     <style>
-        /* ------------------------------------------- */
-        /* 1. 기본 설정 및 뷰포트 고정 */
-        /* ------------------------------------------- */
-        html, body {
+        
+        /* SUIT 폰트 정의 (경로 유지) */
+        @font-face {
+            font-family: 'SUIT';
+            src: url('Font/SUIT-Light.ttf') format('truetype');
+            font-weight: 300; 
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SUIT';
+            src: url('Font/SUIT-Regular.ttf') format('truetype');
+            font-weight: 400; 
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SUIT';
+            src: url('Font/SUIT-Medium.ttf') format('truetype'); 
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SUIT';
+            src: url('Font/SUIT-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SUIT';
+            src: url('Font/SUIT-ExtraBold.ttf') format('truetype');
+            font-weight: 800; 
+            font-style: normal;
+        }
+
+
+        :root {
+            --main-text-color: #161317;
+            --sub-text-color: #535353;
+            --line-color: #ced4da;
+            --topbar-height-vw: 27.2vw; 
+            --bottombar-height-vw: 21.33vw; 
+            --circle-size: 16vw; /* 60px */ 
+            --font-suit: 'SUIT', -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            --selected-color: #007bff; 
+        }
+
+        body {
+            width: 100vw; 
+            min-height: 100vh;
             margin: 0;
             padding: 0;
-            height: 100%; 
-            font-family: sans-serif;
-            display: flex;
+            background-color: #FDFDFD; 
+            overflow-x: hidden; 
+            font-family: var(--font-suit);
+            box-sizing: border-box;
+            display: flex; 
             justify-content: center;
-            align-items: flex-start;
-            box-sizing: border-box;
-            background-color: #ffffff; 
-            overflow: hidden; 
         }
 
-        /* ------------------------------------------- */
-        /* 2. 메인 컨테이너 (모바일 뷰포트 역할) */
-        /* ------------------------------------------- */
-        #result-container {
+        .screen-container {
             width: 100%;
-            max-width: 375px; /* 모바일 기기 너비 제한 유지 */
-            height: 100%;
-            position: relative; /* 절대 위치 요소의 기준점 */
-            background-color: #ffffff; 
-            overflow-y: auto; /* 스크롤 활성화 */
-            -webkit-overflow-scrolling: touch;
-            
-            /* 스크롤바 숨기기 */
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+            max-width: 375px; 
+            min-height: 100vh;
+            position: relative;
+            background-color: #FDFDFD;
+        }
+
+        .main-content {
+            /* 336px 너비를 위해 패딩 조정: 375 - 336 = 39. 39/2 = 19.5px. 19.5px / 3.75 = 5.2vw */
+            width: 100%;
+            padding: 0 5.2vw; /* 19.5px */
+            box-sizing: border-box;
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; 
         }
         
-        #result-container::-webkit-scrollbar {
-            display: none;
-            width: 0;
-            height: 0;
-        }
-        
-        /* ------------------------------------------- */
-        /* 3. 콘텐츠 영역 및 이미지 스타일 */
-        /* ------------------------------------------- */
-        
-        /* 결과 이미지 스타일 */
-        .result-image {
+        .scroll-content-wrapper { 
             width: 100%; 
-            height: auto;
+            padding-top: 8vw; 
+            padding-bottom: 5.33vw; 
+            position: relative; 
+        }
+        
+        .main-content::-webkit-scrollbar { display: none; }
+        .main-content { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* ------------------------- 설문 요소 스타일 (VW로 변환) ------------------------- */
+        
+        .question-number { 
+            font-family: var(--font-suit); 
+            font-size: 4.8vw; 
+            font-weight: 800; 
+            color: #9A9A9A; 
+            margin-top: -1.33vw; 
+            margin-bottom: 2.67vw; 
+        }
+        
+        .survey-question { 
+            font-family: var(--font-suit); 
+            font-size: 4vw; /* 15px */
+            font-weight: 700; /* Bold */
+            letter-spacing: -0.07vw; /* -0.3px */
+            color: var(--main-text-color); 
+            line-height: 1.4; 
+            margin-bottom: 2.67vw; 
+            width: 100%; 
+        }
+        
+        /* .survey-question-block의 width: 100%는 .main-content의 5.2vw 패딩 덕분에 336px이 됨 */
+        .survey-question-block { width: 100%; margin-bottom: 5.33vw; padding: 5.33vw; border: 0.5px solid var(--line-color); border-radius: 2.13vw; background-color: #FFFFFF; box-sizing: border-box; box-shadow: 0 0.267vw 0.8vw rgba(0,0,0,0.05); }
+        .options-area-wrapper { position: relative; height: var(--circle-size); width: 100%; display: flex; justify-content: space-between; padding: 0; box-sizing: border-box; margin-bottom: 4vw; }
+        
+        .options-item { 
+            position: relative; 
+            width: var(--circle-size); 
+            height: var(--circle-size); 
+            cursor: pointer; 
+        }
+        
+        .options-item img {
+            width: 100%;
+            height: 100%;
             display: block;
+            object-fit: contain;
+            z-index: 1; 
         }
         
-        /* ------------------------------------------- */
-        /* 4. 막대 그래프 섹션 스타일 (절대 위치 오버레이 - 픽셀 단위 유지) */
-        /* ------------------------------------------- */
-        
-        .stat-section {
-            /* Y 위치 993.5px 고정 */
-            position: absolute;
-            top: 993.5px; 
-            left: 0;
+        .options-description { 
             width: 100%; 
-            box-sizing: border-box;
-            /* X 위치 108px 고정 */
-            padding-left: 108px; 
-            /* 막대 100% 길이 조정: 45px로 복구 */
-            padding-right: 45px; 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 0; 
+            box-sizing: border-box; 
+            margin-top: 1.33vw; 
         }
         
-        .stat-item {
-            height: 5px; /* 막대 굵기 5px 고정 */
-            margin-bottom: 95px; /* 막대 간격 100px 유지 */
-            position: relative; 
-            display: flex;
-            align-items: center;
-            box-sizing: border-box;
-            /* 퍼센트 숫자 공간 확보: 45px로 복구 */
-            padding-right: 45px; 
+        .options-description span {
+            font-family: var(--font-suit); 
+            font-size: 2.67vw; 
+            font-weight: 300; 
+            color: var(--sub-text-color);
+            width: var(--circle-size); 
+            text-align: center; 
+            padding: 0;
+        }
+
+        .submit-button-container { width: 100%; display: flex; justify-content: center; margin-top: 8vw; padding-bottom: 5.33vw; }
+        
+        .submit-button { 
+            width: 90%; 
+            height: 13.33vw; 
+            background-color: var(--main-text-color); 
+            border: none; 
+            border-radius: 2.13vw; 
+            font-family: var(--font-suit); 
+            font-size: 4.27vw; 
+            font-weight: 800; 
+            color: #FFFFFF; 
+            cursor: pointer; 
+            text-align: center; 
         }
         
-        /* 막대 그래프 컨테이너 */
-        .bar-container {
-            flex-grow: 1;
-            height: 100%; 
-            background-color: transparent; 
-            border-radius: 2.5px; 
-            overflow: hidden;
-            position: relative; 
+        .top-quiz-header { width: 100%; display: flex; align-items: center; position: relative; padding-top: 2.67vw; padding-bottom: 8vw; }
+        
+        .nav-icon { 
+            position: absolute; left: 0; z-index: 5; 
+            font-family: var(--font-suit); 
+            font-size: 6.4vw; 
+            font-weight: 300; 
+            color: var(--main-text-color); line-height: 1; cursor: pointer; 
         }
-
-        /* 실제 채워지는 막대 */
-        .bar {
-            height: 100%;
-            width: 0%; /* JS로 업데이트될 예정. 초기값 0% */
-            border-radius: 2.5px; 
-            transition: width 0.5s ease-out;
+        
+        .page-indicator { 
+            flex-grow: 1; text-align: center; 
+            font-family: var(--font-suit); font-size: 3.73vw; font-weight: 400; 
+            color: var(--main-text-color); line-height: 1; 
         }
-
-        /* 퍼센트 숫자 스타일 */
-        .score-info {
-            position: absolute;
-            top: 50%; 
-            right: 0; 
-            transform: translateY(-50%); 
-            font-size: 13px; 
-            font-weight: 700; 
-            color: #161317; 
-            text-align: right;
-            /* 퍼센트 숫자 공간: 45px로 복구 */
-            width: 45px; 
-        }
-
-        /* 색상 정의 */
-        .yellow-bar { background-color: #FFD600; } 
-        .purple-bar { background-color: #8A2BE2; } 
-        .pink-bar { background-color: #FF69B4; } 
-        .green-bar { background-color: #3CB371; } 
 
     </style>
 </head>
 <body>
-    <div id="result-container">
-        
-        <img src="Image/결과1_디지털.svg" alt="디지털 과부하 결과 이미지" class="result-image">
-        
-        <div class="stat-section">
-            
-            <div class="stat-item">
-                <div class="bar-container">
-                    <div class="bar yellow-bar result-bar bar-1" style="width: 0%;"></div>
+    <div class="screen-container">
+        <div class="main-content">
+            <div class="scroll-content-wrapper">
+
+                <div class="top-quiz-header">
+                    <div class="nav-icon">&lt;</div>
+                    <div class="page-indicator">4 / 4</div>
                 </div>
-                <span class="score-info percentage-text text-1">0%</span>
-            </div>
-            
-            <div class="stat-item">
-                <div class="bar-container">
-                    <div class="bar purple-bar result-bar bar-2" style="width: 0%;"></div>
+
+                <div class="survey-content">
+                    
+                    <div class="survey-question-block" data-question-id="Q25">
+                        <div class="question-number">Q25.</div>
+                        <div class="survey-question">인터넷이나 스마트폰 사용량을 조절하기 위해 가족이나 친구에게 거짓말을 한 적이 있나요?</div>
+                        <div class="options-area-wrapper">
+                            <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
+                            <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
+                            <div class="options-item" data-value="2"><img src="Image/기본버튼2.svg" alt="옵션 2 버튼"></div>
+                            <div class="options-item" data-value="3"><img src="Image/기본버튼3.svg" alt="옵션 3 버튼"></div>
+                        </div>
+                        <div class="options-description">
+                            <span>전혀 아니다</span>
+                            <span>매우 그렇다</span>
+                        </div>
+                    </div>
+
+                    <div class="survey-question-block" data-question-id="Q26">
+                        <div class="question-number">Q26.</div>
+                        <div class="survey-question">다른 사람들과 비교할 때, 나는 미래에 대한 계획이나 목표를 세우는 데 어려움이 있다고 느낍니까?</div>
+                        <div class="options-area-wrapper">
+                            <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
+                            <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
+                            <div class="options-item" data-value="2"><img src="Image/기본버튼2.svg" alt="옵션 2 버튼"></div>
+                            <div class="options-item" data-value="3"><img src="Image/기본버튼3.svg" alt="옵션 3 버튼"></div>
+                        </div>
+                        <div class="options-description">
+                            <span>전혀 아니다</span>
+                            <span>매우 그렇다</span>
+                        </div>
+                    </div>
+
+                    <div class="survey-question-block" data-question-id="Q27">
+                        <div class="question-number">Q27.</div>
+                        <div class="survey-question">술을 마시지 않으면, 금단 증상(손떨림, 구역질, 불안 등)을 겪은 적이 있습니까?</div>
+                        <div class="options-area-wrapper">
+                            <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
+                            <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
+                            <div class="options-item" data-value="2"><img src="Image/기본버튼2.svg" alt="옵션 2 버튼"></div>
+                            <div class="options-item" data-value="3"><img src="Image/기본버튼3.svg" alt="옵션 3 버튼"></div>
+                        </div>
+                        <div class="options-description">
+                            <span>전혀 아니다</span>
+                            <span>매우 그렇다</span>
+                        </div>
+                    </div>
+
+                    <div class="survey-question-block" data-question-id="Q28">
+                        <div class="question-number">Q28.</div>
+                        <div class="survey-question">최근 2주 동안, 돈을 함부로 쓰거나, 안전하지 않은 성관계를 갖거나, 무모한 투자를 하는 등 평소와 달리 충동적인 행동을 했던 적이 얼마나 자주 있나요?</div>
+                        <div class="options-area-wrapper">
+                            <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
+                            <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
+                            <div class="options-item" data-value="2"><img src="Image/기본버튼2.svg" alt="옵션 2 버튼"></div>
+                            <div class="options-item" data-value="3"><img src="Image/기본버튼3.svg" alt="옵션 3 버튼"></div>
+                        </div>
+                        <div class="options-description">
+                            <span>전혀 아니다</span>
+                            <span>매우 그렇다</span>
+                        </div>
+                    </div>
+
+                    <div class="survey-question-block" data-question-id="Q29">
+                        <div class="question-number">Q29.</div>
+                        <div class="survey-question">인터넷이나 스마트폰을 사용해야 한다는 생각 때문에 수면 시간을 줄인 적이 있나요?</div>
+                        <div class="options-area-wrapper">
+                            <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
+                            <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
+                            <div class="options-item" data-value="2"><img src="Image/기본버튼2.svg" alt="옵션 2 버튼"></div>
+                            <div class="options-item" data-value="3"><img src="Image/기본버튼3.svg" alt="옵션 3 버튼"></div>
+                        </div>
+                        <div class="options-description">
+                            <span>전혀 아니다</span>
+                            <span>매우 그렇다</span>
+                        </div>
+                    </div>
+
+                    <div class="survey-question-block" data-question-id="Q30">
+                        <div class="question-number">Q30.</div>
+                        <div class="survey-question">최근 2주 동안, 식욕이 없거나 너무 많이 먹어서 괴로웠던 적이 얼마나 자주 있나요?</div>
+                        <div class="options-area-wrapper">
+                            <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
+                            <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
+                            <div class="options-item" data-value="2"><img src="Image/기본버튼2.svg" alt="옵션 2 버튼"></div>
+                            <div class="options-item" data-value="3"><img src="Image/기본버튼3.svg" alt="옵션 3 버튼"></div>
+                        </div>
+                        <div class="options-description">
+                            <span>전혀 아니다</span>
+                            <span>매우 그렇다</span>
+                        </div>
+                    </div>
+
+                    <div class="survey-question-block" data-question-id="Q31">
+                        <div class="question-number">Q31.</div>
+                        <div class="survey-question">점차 더 많은 양의 술을 마셔야만 이전과 같은 취기나 효과를 얻을 수 있습니까?</div>
+                        <div class="options-area-wrapper">
+                            <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
+                            <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
+                            <div class="options-item" data-value="2"><img src="Image/기본버튼2.svg" alt="옵션 2 버튼"></div>
+                            <div class="options-item" data-value="3"><img src="Image/기본버튼3.svg" alt="옵션 3 버튼"></div>
+                        </div>
+                        <div class="options-description">
+                            <span>전혀 아니다</span>
+                            <span>매우 그렇다</span>
+                        </div>
+                    </div>
+
+                    <div class="survey-question-block" data-question-id="Q32">
+                        <div class="question-number">Q32.</div>
+                        <div class="survey-question">최근 2주 동안, 잠을 자지 않아도 피곤하지 않다고 느꼈던 적이 얼마나 자주 있나요?</div>
+                        <div class="options-area-wrapper">
+                            <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
+                            <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
+                            <div class="options-item" data-value="2"><img src="Image/기본버튼2.svg" alt="옵션 2 버튼"></div>
+                            <div class="options-item" data-value="3"><img src="Image/기본버튼3.svg" alt="옵션 3 버튼"></div>
+                        </div>
+                        <div class="options-description">
+                            <span>전혀 아니다</span>
+                            <span>매우 그렇다</span>
+                        </div>
+                    </div>
+                    
                 </div>
-                <span class="score-info percentage-text text-2">0%</span>
-            </div>
-            
-            <div class="stat-item">
-                <div class="bar-container">
-                    <div class="bar pink-bar result-bar bar-3" style="width: 0%;"></div>
+                
+                <div class="submit-button-container">
+                    <button class="submit-button">최종 결과 보기</button>
                 </div>
-                <span class="score-info percentage-text text-3">0%</span>
             </div>
-            
-            <div class="stat-item">
-                <div class="bar-container">
-                    <div class="bar green-bar result-bar bar-4" style="width: 0%;"></div>
-                </div>
-                <span class="score-info percentage-text text-4">0%</span>
-            </div>
-            
         </div>
-        
-        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            // 🚨🚨🚨 최대 점수 설정 (8문항 * 최대 3점 = 24점) 🚨🚨🚨
-            const MAX_SCORE_PER_VARIABLE = 24; 
             
             // =========================================================================
-            // 1. 로컬 스토리지에서 최종 점수 데이터 로드
+            // 1. 초기 설정 및 History 추적 
             // =========================================================================
-            const scoresString = localStorage.getItem('finalQuizScores');
-            if (!scoresString) {
-                console.error('테스트 결과를 찾을 수 없습니다 (finalQuizScores is missing).');
-                // alert('테스트 결과를 찾을 수 없습니다. 다시 테스트를 진행해주세요.');
-                return;
+            const totalPages = 4;
+            const currentPageId = 'page4'; 
+            const nextPageUrl = 'test_result.html'; // 최종 결과 페이지로 이동
+            const prevPageUrl = 'test_page3.html'; 
+            
+            // History Index 추적 설정
+            const sessionHistoryKey = 'historyIndex';
+            let currentHistoryIndex = parseInt(sessionStorage.getItem(sessionHistoryKey) || '0', 10); 
+
+            if (!history.state || history.state.index === undefined) {
+                history.replaceState({ index: currentHistoryIndex }, '', window.location.href);
             }
 
-            const finalScores = JSON.parse(scoresString);
+            const quizAnswers = JSON.parse(localStorage.getItem('quizAnswers')) || {}; 
+            let answers = quizAnswers[currentPageId] || {}; 
             
-            // 점수 객체에서 각 항목 추출
-            const yellowScore = finalScores.Yellow || 0;
-            const purpleScore = finalScores.Purple || 0;
-            const pinkScore = finalScores.Pink || 0;
-            const greenScore = finalScores.Green || 0;
-            
-            // ============================================  =============================
-            // 2. 퍼센트 계산 (점수 / 24점 * 100)
-            // =========================================================================
-            const calculatePercentage = (score) => {
-                // 점수를 최대 점수(24)로 나눈 후 100을 곱하고 반올림
-                return Math.round((score / MAX_SCORE_PER_VARIABLE) * 100); 
-            };
-
-            const percentage = {
-                Yellow: calculatePercentage(yellowScore),
-                Purple: calculatePercentage(purpleScore),
-                Pink: calculatePercentage(pinkScore),
-                Green: calculatePercentage(greenScore)
+            // 질문 ID와 항목 색상 매핑
+            const colorMap = {
+                'Q25': '노란', 'Q29': '노란', 'Q27': '보라', 'Q31': '보라',
+                'Q26': '핑크', 'Q30': '핑크', 'Q28': '초록', 'Q32': '초록',
             };
             
-            console.log('계산된 퍼센트 (24점 기준):', percentage);
+            const options = document.querySelectorAll('.options-item');
+            const pageIndicator = document.querySelector('.page-indicator');
+            pageIndicator.textContent = `${currentPageId.replace('page', '')} / ${totalPages}`;
+
+
+            // =========================================================================
+            // 2. 함수: UI 초기화 (버튼 상태 복원/업데이트)
+            // =========================================================================
+            function initializeUI() {
+                options.forEach(item => {
+                    const questionBlock = item.closest('.survey-question-block');
+                    const questionId = questionBlock.dataset.questionId;
+                    const itemValue = item.dataset.value;
+                    const selectedImg = item.querySelector('img');
+
+                    if (answers[questionId] && answers[questionId].value === itemValue) {
+                        const color = colorMap[questionId];
+                        selectedImg.src = `Image/${color}버튼${itemValue}.svg`;
+                        item.classList.add('selected');
+                    } else {
+                        selectedImg.src = `Image/기본버튼${itemValue}.svg`;
+                        item.classList.remove('selected');
+                    }
+                });
+            }
+
+            // =========================================================================
+            // 3. 이벤트 핸들러: 옵션 버튼 클릭 시 (선택 상태 저장)
+            // =========================================================================
+            options.forEach(item => {
+                item.addEventListener('click', (event) => {
+                    const selectedItem = event.currentTarget;
+                    const questionBlock = selectedItem.closest('.survey-question-block');
+                    const questionId = questionBlock.dataset.questionId;
+                    const value = selectedItem.dataset.value;
+
+                    if (!colorMap[questionId]) return;
+
+                    const color = colorMap[questionId];
+                    const selectedImg = selectedItem.querySelector('img');
+                    const itemValue = selectedItem.dataset.value;
+
+                    if (selectedItem.classList.contains('selected')) {
+                        selectedImg.src = `Image/기본버튼${itemValue}.svg`;
+                        selectedItem.classList.remove('selected');
+                        delete answers[questionId]; 
+                    } else {
+                        const siblings = questionBlock.querySelectorAll('.options-item');
+                        siblings.forEach(sibling => {
+                            if (sibling !== selectedItem && sibling.classList.contains('selected')) {
+                                const siblingImg = sibling.querySelector('img');
+                                const siblingValue = sibling.dataset.value;
+                                siblingImg.src = `Image/기본버튼${siblingValue}.svg`;
+                                sibling.classList.remove('selected');
+                            }
+                        });
+
+                        selectedImg.src = `Image/${color}버튼${itemValue}.svg`;
+                        selectedItem.classList.add('selected');
+                        answers[questionId] = { value: itemValue, color: color }; 
+                    }
+                    
+                    // 선택할 때마다 로컬 스토리지에 저장 (실시간 저장)
+                    quizAnswers[currentPageId] = answers;
+                    localStorage.setItem('quizAnswers', JSON.stringify(quizAnswers));
+                });
+            });
+
+            // =========================================================================
+            // 4. 이벤트 핸들러: "뒤로가기" 버튼 클릭 시 (뒤로가기 직전 페이지 초기화)
+            // =========================================================================
+            const navIcon = document.querySelector('.nav-icon');
+            navIcon.addEventListener('click', () => {
+                
+                // [요청 사항 반영] 뒤로 가기 직전 페이지(현재 페이지, Page 4)의 데이터를 초기화
+                let quizAnswers = JSON.parse(localStorage.getItem('quizAnswers') || '{}');
+                delete quizAnswers[currentPageId]; 
+                localStorage.setItem('quizAnswers', JSON.stringify(quizAnswers));
+
+                // 이전 페이지로 이동
+                history.back();
+            });
+            // =========================================================================
+
             
             // =========================================================================
-            // 3. UI 업데이트 함수 정의
+            // 5. 이벤트 핸들러: "최종 결과 보기" 버튼 클릭 시 
             // =========================================================================
-            const updateResultUI = (barSelector, textSelector, percent) => {
-                const barElement = document.querySelector(barSelector);
-                const textElement = document.querySelector(textSelector);
-
-                if (barElement) {
-                    // 막대의 width 스타일을 퍼센트 값으로 설정
-                    barElement.style.width = `${percent}%`;
+            const submitButton = document.querySelector('.submit-button');
+            submitButton.addEventListener('click', () => {
+                
+                // 유효성 검사 로직
+                const totalQuestions = 8;
+                if (Object.keys(answers).length !== totalQuestions) {
+                    alert('모든 문항에 체크해야 합니다.');
+                    return; 
                 }
-                if (textElement) {
-                    // 텍스트 내용 업데이트
-                    textElement.textContent = `${percent}%`;
+
+                // 현재 페이지의 선택된 답변을 다시 한번 저장 (유효성 검사 통과 시)
+                quizAnswers[currentPageId] = answers;
+                localStorage.setItem('quizAnswers', JSON.stringify(quizAnswers));
+
+                // History Index 증가 및 저장 (다음 페이지를 위한 준비)
+                currentHistoryIndex++;
+                sessionStorage.setItem(sessionHistoryKey, currentHistoryIndex); 
+                history.pushState({ index: currentHistoryIndex }, '', nextPageUrl);
+
+                // 최종 결과 페이지로 이동
+                window.location.href = nextPageUrl;
+            });
+            
+            // =========================================================================
+            // 6. 페이지 로드 시 상태 유지 
+            // =========================================================================
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted) {
+                    const savedIndex = history.state.index; 
+                    console.log('BFCache 로드 감지. 현재 페이지 상태 유지.');
+                    initializeUI();
+                    sessionStorage.setItem(sessionHistoryKey, savedIndex);
+                } else if (history.state && history.state.index !== undefined) {
+                    sessionStorage.setItem(sessionHistoryKey, history.state.index);
                 }
-            };
-
-            // =========================================================================
-            // 4. 각 항목에 결과 반영 (매핑: Yellow=1, Purple=2, Pink=3, Green=4)
+            });
             // =========================================================================
             
-            // Yellow (노란) = 첫 번째 막대
-            updateResultUI('.result-bar.bar-1', '.percentage-text.text-1', percentage.Yellow);
-            
-            // Purple (보라) = 두 번째 막대
-            updateResultUI('.result-bar.bar-2', '.percentage-text.text-2', percentage.Purple);
-            
-            // Pink (핑크) = 세 번째 막대
-            updateResultUI('.result-bar.bar-3', '.percentage-text.text-3', percentage.Pink);
-            
-            // Green (초록) = 네 번째 막대
-            updateResultUI('.result-bar.bar-4', '.percentage-text.text-4', percentage.Green);
-
-
-            // =========================================================================
-            // 5. 페이지 이동 버튼 이벤트 제거됨
-            // =========================================================================
-            // 홈으로/다시하기 버튼 코드가 제거되었습니다.
-
+            // 페이지 로드 시 UI 상태 복원
+            initializeUI();
         });
     </script>
 </body>

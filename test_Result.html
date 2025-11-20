@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>결과 페이지 - 막대 그래프 오버레이 (50% 맞춤 픽셀 복구)</title>
+    <title>결과 페이지 - 막대 그래프 오버레이</title>
     <style>
         /* ------------------------------------------- */
         /* 1. 기본 설정 및 뷰포트 고정 */
@@ -32,7 +32,7 @@
             background-color: #ffffff; 
             overflow-y: auto; /* 스크롤 활성화 */
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 20vw; /* 하단 공간 확보 */
+            padding-bottom: 50px; /* 하단 스크롤 여유 공간 */
         }
         
         #result-container::-webkit-scrollbar { display: none; }
@@ -53,8 +53,8 @@
         /* ------------------------------------------- */
         .stat-section {
             position: absolute;
-            top: 60%; /* SVG 이미지에 맞춰 위치 조정 필요 */
-            left: 50%;
+            top: 935px; /* ⭐ 이 값을 조정하여 그래프 위치를 맞춰주세요! */
+            left: 68.5%;
             transform: translateX(-50%);
             width: 80%; /* 컨테이너 너비 조정 */
             max-width: 300px; 
@@ -64,14 +64,16 @@
         .stat-item {
             display: flex;
             align-items: center;
-            margin-bottom: 12px; 
+            margin-bottom: 80px; /* 항목 사이 간격 100px 유지 */
         }
-
+        
         .bar-container {
-            flex-grow: 1;
-            height: 16px; /* 막대 높이 */
-            background-color: #e9ecef; /* 배경 막대 색상 */
-            border-radius: 8px;
+            /* flex-grow: 1; 속성을 제거하여 유연성을 없앱니다. */
+            width: 176px; /* 회색 배경 막대의 길이를 176px로 고정 */
+            flex-shrink: 0; /* 너비가 좁아져도 176px를 유지하도록 설정 */
+            height: 5px; /* ✨ CSS 수정: 막대 굵기(높이)를 5px로 변경 */
+            background-color: #e9ecef; /* 배경 막대 (회색) 색상 */
+            border-radius: 3px; /* 굵기에 맞춰 radius 조정 */
             overflow: hidden;
             margin-right: 10px;
         }
@@ -80,20 +82,15 @@
             height: 100%;
             width: 0%; /* JS로 업데이트될 예정. 초기값 0% */
             transition: width 0.8s ease-out; /* 부드러운 애니메이션 */
-            border-radius: 8px;
+            border-radius: 3px; /* 굵기에 맞춰 radius 조정 */
         }
 
         /* 막대 색상 정의 */
-        .yellow-bar { background-color: #FFD700; /* 임시 색상 */ } 
-        .purple-bar { background-color: #8A2BE2; /* 임시 색상 */ } 
-        .pink-bar { background-color: #FF69B4; /* 임시 색상 */ } 
-        .green-bar { background-color: #3CB371; /* 임시 색상 */ } 
+        .yellow-bar { background-color: #FFD700; } 
+        .purple-bar { background-color: #8A2BE2; } 
+        .pink-bar { background-color: #FF69B4; } 
+        .green-bar { background-color: #3CB371; } 
         
-        /* 기존 색상 참고 (주석 처리) */
-        /*.yellow-bar { background-color: #A9A9A9; } */
-        /*.purple-bar { background-color: #A9A9A9; } */
-        /*.pink-bar { background-color: #A9A9A9; } */
-        /*.green-bar { background-color: #A9A9A9; } */
 
         .score-info {
             width: 40px; /* 퍼센트 텍스트 영역 너비 고정 */
@@ -103,38 +100,6 @@
             color: #161317;
         }
         
-        /* ------------------------------------------- */
-        /* 5. 버튼 섹션 */
-        /* ------------------------------------------- */
-        .button-section {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            padding: 30px 0;
-        }
-
-        .action-button {
-            width: 150px;
-            height: 45px;
-            margin: 0 5px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .home-button {
-            background-color: #f0f0f0;
-            color: #161317;
-        }
-        
-        .restart-button {
-            background-color: #161317;
-            color: #ffffff;
-        }
-
     </style>
 </head>
 <body>
@@ -174,51 +139,74 @@
             
         </div>
         
-        <div class="button-section">
-            <button class="action-button home-button">홈으로</button>
-            <button class="action-button restart-button">다시하기</button>
-        </div>
-
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
             // =========================================================================
-            // 1. 로컬 스토리지에서 최종 점수 데이터 로드
+            // 1. 점수 합산 로직 (P1 점수 + P2, P3, P4 답변) - 변경 없음
             // =========================================================================
-            const scoresString = localStorage.getItem('finalQuizScores');
-            if (!scoresString) {
-                alert('테스트 결과를 찾을 수 없습니다. 다시 테스트를 진행해주세요.');
-                // window.location.href = 'test_page1.html'; 
-                return;
+            
+            // Page 1에서 저장된 기본 점수 (Q1-Q8)
+            const quizScoresFromPage1 = JSON.parse(localStorage.getItem('quizScores') || '{}');
+            
+            // Page 2, 3, 4에서 저장된 답변 (Q9-Q32)
+            const quizAnswers = JSON.parse(localStorage.getItem('quizAnswers') || '{}');
+
+            // 점수 초기화 (Page 1에서 온 점수부터 시작)
+            let totalScores = {
+                Yellow: quizScoresFromPage1.Yellow || 0,
+                Purple: quizScoresFromPage1.Purple || 0,
+                Pink: quizScoresFromPage1.Pink || 0,
+                Green: quizScoresFromPage1.Green || 0
+            };
+            
+            // 질문 ID와 항목 색상 매핑 (Q9-Q32)
+            const colorMap = {
+                // P2 (Q9-Q16)
+                'Q9': 'Yellow', 'Q13': 'Yellow', 'Q10': 'Purple', 'Q15': 'Purple',
+                'Q11': 'Pink', 'Q14': 'Pink', 'Q12': 'Green', 'Q16': 'Green',
+                // P3 (Q17-Q24)
+                'Q17': 'Yellow', 'Q21': 'Yellow', 'Q19': 'Purple', 'Q23': 'Purple',
+                'Q18': 'Pink', 'Q22': 'Pink', 'Q20': 'Green', 'Q24': 'Green',
+                // P4 (Q25-Q32)
+                'Q25': 'Yellow', 'Q29': 'Yellow', 'Q27': 'Purple', 'Q31': 'Purple',
+                'Q26': 'Pink', 'Q30': 'Pink', 'Q28': 'Green', 'Q32': 'Green',
+            };
+            
+            // Page 2, Page 3, Page 4의 답변 합산
+            for (const pageId in quizAnswers) {
+                const answers = quizAnswers[pageId];
+                for (const qId in answers) {
+                    const color = colorMap[qId];
+                    // answer.value는 문자열이므로 반드시 숫자로 변환합니다.
+                    const score = parseInt(answers[qId].value, 10); 
+                    
+                    if (color && !isNaN(score)) {
+                        totalScores[color] += score;
+                    }
+                }
             }
 
-            const finalScores = JSON.parse(scoresString);
-            console.log('로드된 최종 점수:', finalScores);
-
-            // 점수 객체에서 각 항목 추출 (대소문자 일치 중요)
-            const yellowScore = finalScores.Yellow || 0;
-            const purpleScore = finalScores.Purple || 0;
-            const pinkScore = finalScores.Pink || 0;
-            const greenScore = finalScores.Green || 0;
-
-            // 점수 배열
-            const scoreValues = [yellowScore, purpleScore, pinkScore, greenScore];
+            // 최종 점수 변수에 할당
+            const yellowScore = totalScores.Yellow;
+            const purpleScore = totalScores.Purple;
+            const pinkScore = totalScores.Pink;
+            const greenScore = totalScores.Green;
             
             // =========================================================================
-            // 2. 최대 점수 계산 (4가지 점수 중 가장 큰 값을 100% 기준으로 설정)
+            // 2. 퍼센트 계산 (색깔 막대가 176px 기준에 맞춰 비율대로 움직이도록 % 계산) - 변경 없음
             // =========================================================================
-            // Math.max(...scoreValues)를 사용하되, 모든 점수가 0일 경우 나누기 오류를 방지하기 위해 최소 1로 설정
-            const maxScore = Math.max(...scoreValues, 1); 
+            
+            // 총 8문항 * 최대 3점 = 24점
+            const MAX_SCORE_ABSOLUTE = 24; 
+            const maxScore = MAX_SCORE_ABSOLUTE;
 
-            // =========================================================================
-            // 3. 퍼센트 계산
-            // =========================================================================
             const calculatePercentage = (score) => {
-                if (maxScore === 0) return 0; // 최대 점수가 0일 경우
-                // 점수를 최대 점수로 나눈 후 100을 곱하고 소수점 둘째 자리에서 반올림
-                return Math.round((score / maxScore) * 100); 
+                if (maxScore === 0) return 0; 
+                // 점수를 절대 최대 점수(24)로 나누어 반올림하여 %를 계산합니다.
+                return Math.min(100, Math.round((score / maxScore) * 100)); 
             };
 
             const percentage = {
@@ -228,67 +216,27 @@
                 Green: calculatePercentage(greenScore)
             };
             
-            console.log('계산된 퍼센트:', percentage);
-            
             // =========================================================================
-            // 4. UI 업데이트 함수 정의
+            // 3. UI 업데이트 함수 실행 - 변경 없음
             // =========================================================================
 
-            /**
-             * 결과를 막대와 퍼센트 텍스트에 반영합니다.
-             * @param {string} barSelector 막대(div)의 클래스 셀렉터 (예: '.result-bar.bar-1')
-             * @param {string} textSelector 퍼센트 텍스트(span)의 클래스 셀렉터 (예: '.percentage-text.text-1')
-             * @param {number} percent 반영할 퍼센트 값 (0-100)
-             */
             const updateResultUI = (barSelector, textSelector, percent) => {
                 const barElement = document.querySelector(barSelector);
                 const textElement = document.querySelector(textSelector);
 
                 if (barElement) {
-                    // 막대의 width 스타일을 퍼센트 값으로 설정
+                    // bar-container(176px)를 기준으로 퍼센트(%) 값을 막대 너비로 설정합니다.
                     barElement.style.width = `${percent}%`;
                 }
                 if (textElement) {
-                    // 텍스트 내용 업데이트
                     textElement.textContent = `${percent}%`;
                 }
             };
 
-            // =========================================================================
-            // 5. 각 항목에 결과 반영 (사용자 요청 매핑: Yellow=1, Purple=2, Pink=3)
-            // =========================================================================
-            
-            // Yellow (노란) = 첫 번째 막대
             updateResultUI('.result-bar.bar-1', '.percentage-text.text-1', percentage.Yellow);
-            
-            // Purple (보라) = 두 번째 막대
             updateResultUI('.result-bar.bar-2', '.percentage-text.text-2', percentage.Purple);
-            
-            // Pink (핑크) = 세 번째 막대
             updateResultUI('.result-bar.bar-3', '.percentage-text.text-3', percentage.Pink);
-            
-            // Green (초록) = 네 번째 막대
             updateResultUI('.result-bar.bar-4', '.percentage-text.text-4', percentage.Green);
-
-
-            // =========================================================================
-            // 6. 페이지 이동 버튼 이벤트 (홈으로/다시하기)
-            // =========================================================================
-            const homeButton = document.querySelector('.home-button');
-            const restartButton = document.querySelector('.restart-button');
-
-            homeButton.addEventListener('click', () => {
-                 // **TODO: 홈 페이지 URL로 변경**
-                 alert('홈으로 이동 (URL을 index.html 등으로 변경해야 합니다.)');
-                 // window.location.href = 'index.html'; 
-            });
-
-            restartButton.addEventListener('click', () => {
-                // 로컬 스토리지 초기화 후 첫 페이지로 이동
-                localStorage.removeItem('quizAnswers');
-                localStorage.removeItem('finalQuizScores');
-                window.location.href = 'test_page1.html'; 
-            });
 
         });
     </script>
