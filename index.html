@@ -86,7 +86,8 @@
             --vertical-line-color: #666; 
             --horizontal-line-color: #888; 
             
-            /* 🚨 겹침 방지를 위해 --vertical-offset 제거 */
+            /* 🚨 상단 여백 (25.07vw)의 절반을 오프셋으로 사용: 12.535vw */
+            --vertical-half-offset: 12.535vw; 
         }
 
         body {
@@ -110,11 +111,12 @@
         
         .main-content {
             position: absolute;
-            /* 🚨 최상단으로 이동 */
-            top: 0; 
+            /* 🚨 중간 위치로 조정: top: 12.535vw */
+            top: var(--vertical-half-offset); 
             left: 0; width: 100%; 
+            /* height 및 min-height는 필요에 따라 조정 */
             height: 100%; 
-            min-height: 100vh; 
+            min-height: calc(100vh - var(--vertical-half-offset) - var(--bottombar-height)); 
             background-color: transparent; 
             box-sizing: border-box;
         }
@@ -123,7 +125,7 @@
         .header-text {
             position: absolute;
             width: calc(100% - 22.93vw); left: 50%; transform: translateX(-50%);
-            /* 🚨 원래 위치(9.33vw) 복원 */
+            /* 🚨 원래 위치 복원 */
             top: 9.33vw; 
             text-align: center;
             z-index: 5;
@@ -150,7 +152,7 @@
             position: absolute;
             width: var(--start-button-size); 
             height: var(--start-button-size);
-            /* 🚨 원래 위치(66.67vw) 복원 */
+            /* 🚨 원래 위치 복원 */
             top: 66.67vw; 
             left: 50%; 
             transform: translateX(-50%); 
@@ -168,7 +170,7 @@
         .dashed-line-container.horizontal {
             position: absolute;
             width: 100%; height: 1px; z-index: 1;
-            /* 🚨 원래 위치(88.00vw) 복원 */
+            /* 🚨 원래 위치 복원 */
             top: 88.00vw; 
             transform: translateY(-50%); 
             background-image: linear-gradient(to right, var(--horizontal-line-color) 33%, transparent 33%);
@@ -180,7 +182,7 @@
         .dashed-line-container.vertical {
             position: absolute;
             left: 50%; transform: translateX(-50%);
-            /* 🚨 원래 위치(36.80vw) 복원 */
+            /* 🚨 원래 위치 복원 */
             top: 36.80vw; 
             height: 95.20vw; 
             width: 1px;
@@ -194,7 +196,7 @@
         .info-box-container {
             position: absolute;
             width: 89.60vw;
-            /* 🚨 원래 위치(136.00vw) 복원 */
+            /* 🚨 원래 위치 복원 */
             top: 136.00vw; 
             left: 50%; 
             transform: translateX(-50%); 
@@ -227,7 +229,7 @@
         .guidance-text {
             position: absolute;
             width: calc(100% - 10.67vw * 2); left: 50%; transform: translateX(-50%);
-            /* 🚨 원래 위치(154.67vw) 복원 */
+            /* 🚨 원래 위치 복원 */
             top: 154.67vw; 
             text-align: center;
             z-index: 5;
