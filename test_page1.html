@@ -6,56 +6,56 @@
     <title>심리 테스트 - 설문 페이지 (피드백 반영)</title>
     <style>
         
-        /*  SUIT 폰트 정의 */
+        /* SUIT 폰트 정의 (경로 유지) */
         @font-face {
             font-family: 'SUIT';
-            src: url('SUIT-Light.ttf') format('truetype');
+            src: url('Font/SUIT-Light.ttf') format('truetype');
             font-weight: 300; 
             font-style: normal;
         }
         @font-face {
             font-family: 'SUIT';
-            src: url('SUIT-Regular.ttf') format('truetype');
+            src: url('Font/SUIT-Regular.ttf') format('truetype');
             font-weight: 400; 
             font-style: normal;
         }
         @font-face {
             font-family: 'SUIT';
-            src: url('SUIT-Medium.ttf') format('truetype'); 
+            src: url('Font/SUIT-Medium.ttf') format('truetype'); 
             font-weight: 500;
             font-style: normal;
         }
         @font-face {
             font-family: 'SUIT';
-            src: url('SUIT-Bold.ttf') format('truetype');
+            src: url('Font/SUIT-Bold.ttf') format('truetype');
             font-weight: 700;
             font-style: normal;
         }
         @font-face {
             font-family: 'SUIT';
-            src: url('SUIT-ExtraBold.ttf') format('truetype');
+            src: url('Font/SUIT-ExtraBold.ttf') format('truetype');
             font-weight: 800; 
             font-style: normal;
         }
 
 
         :root {
-            --device-width: 375px;
+            /* 🚨 375px 기준 VW 변환 값 설정 */
             --main-text-color: #161317;
             --sub-text-color: #535353;
             --line-color: #ced4da;
-            --topbar-height: 102px; 
-            --bottombar-height: 80px; 
+            --topbar-height-vw: 27.2vw; /* 102px */
+            --bottombar-height-vw: 21.33vw; /* 80px */
+            --circle-size: 16vw; /* 60px */ 
             --font-suit: 'SUIT', -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-            --circle-size: 60px; 
         }
 
         body {
-            width: 100%;
+            width: 100vw; /* 🚨 반응형 전체 너비 */
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            background-color: #000;
+            background-color: #FDFDFD; /* 🚨 배경색 수정 */
             overflow-x: hidden; 
             font-family: var(--font-suit);
             box-sizing: border-box;
@@ -64,81 +64,86 @@
         }
 
         .screen-container {
-            width: var(--device-width);
+            /* 🚨 고정된 375px 너비 대신 최대 너비 100% 사용 */
+            width: 100%;
+            max-width: 375px; /* 모바일 뷰포트 기준으로 최대 너비 제한 */
             min-height: 100vh;
             position: relative;
             background-color: #FDFDFD;
         }
         
-        .top-bar-background, .bottom-navbar {
-            position: fixed; 
-            left: 50%;
-            transform: translateX(-50%); 
-            width: var(--device-width); 
-            z-index: 20;
-            box-sizing: border-box;
-            background-image: url('Topbar.jpg'); 
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-        
-        .top-bar-background { top: 0; height: var(--topbar-height); background-position: center top; }
-        .bottom-navbar { bottom: 0; height: var(--bottombar-height); background-position: center bottom; }
-
+        /* 🚨 Top/Bottom Bar 관련 CSS 모두 제거 */
 
         .main-content {
-            position: absolute; 
-            top: var(--topbar-height); 
-            left: 0;
+            /* 🚨 position: absolute 대신 일반적인 흐름 사용 */
             width: 100%;
-            height: calc(100vh - var(--topbar-height) - var(--bottombar-height)); 
-            padding: 0 30px; 
+            /* 🚨 상/하단 바 영역만큼 패딩 제거 및 재설정 */
+            padding: 0 8vw; /* 30px -> 8vw */
             box-sizing: border-box;
             overflow-y: auto; 
             -webkit-overflow-scrolling: touch; 
-            z-index: 10;
         }
-        .main-content::-webkit-scrollbar { display: none; }
-        .main-content { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* 🚨 상단 바 제거 후, 콘텐츠를 중간에 배치하기 위한 패딩 추가 (27.2vw의 절반) */
         .scroll-content-wrapper { 
             width: 100%; 
-            padding-top: 20px; 
-            padding-bottom: 20px; 
+            padding-top: 13.6vw; /* 🚨 중간 배치 효과 (Top Bar 높이의 절반) */
+            padding-bottom: 20px; /* 🚨 기존 패딩 유지 */
             position: relative; 
         }
         
-        /* ------------------------- 설문 요소 스타일 ------------------------- */
+        .main-content::-webkit-scrollbar { display: none; }
+        .main-content { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /*  Q1. 질문 번호: 18px, 800, 위로 5px 이동 */
+        /* ------------------------- 설문 요소 스타일 (VW로 변환) ------------------------- */
+        
+        /* Q1. 질문 번호: 18px -> 4.8vw, 10px -> 2.67vw, 5px -> 1.33vw */
         .question-number { 
             font-family: var(--font-suit); 
-            font-size: 18px; 
+            font-size: 4.8vw; 
             font-weight: 800; 
             color: #9A9A9A; 
-            margin-top: -5px; /*  5px 위로 이동 */
-            margin-bottom: 10px; 
+            margin-top: -1.33vw; 
+            margin-bottom: 2.67vw; 
         }
         
-        /* 질문 내용 텍스트: 15px, Bold (700), 자간 -0.3px */
+        /* 질문 내용 텍스트: 15px -> 4vw */
         .survey-question { 
             font-family: var(--font-suit); 
-            font-size: 15px; 
+            font-size: 4vw; 
             font-weight: 700; 
-            letter-spacing: -0.3px; 
+            letter-spacing: -0.07vw; /* -0.3px -> -0.07vw */
             color: var(--main-text-color); 
             line-height: 1.4; 
-            margin-bottom: 10px; 
+            margin-bottom: 2.67vw; 
             width: 100%; 
         }
         
-        .survey-question-block { width: 100%; margin-bottom: 20px; padding: 20px; border: 0.5px solid var(--line-color); border-radius: 8px; background-color: #FFFFFF; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .options-area-wrapper { position: relative; height: var(--circle-size); width: 100%; display: flex; justify-content: space-between; padding: 0 0px; box-sizing: border-box; margin-bottom: 15px; }
-        .options-item { position: relative; width: var(--circle-size); height: var(--circle-size); cursor: pointer; }
-        .options-image-button { width: 100%; height: 100%; display: block; object-fit: contain; }
+        .survey-question-block { width: 100%; margin-bottom: 5.33vw; padding: 5.33vw; border: 0.5px solid var(--line-color); border-radius: 2.13vw; background-color: #FFFFFF; box-sizing: border-box; box-shadow: 0 0.267vw 0.8vw rgba(0,0,0,0.05); }
+        .options-area-wrapper { position: relative; height: var(--circle-size); width: 100%; display: flex; justify-content: space-between; padding: 0; box-sizing: border-box; margin-bottom: 4vw; }
+        
+        .options-item { 
+            position: relative; 
+            width: var(--circle-size); 
+            height: var(--circle-size); 
+            cursor: pointer; 
+            border: 1px solid var(--line-color); 
+            border-radius: 50%; 
+            background-color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 옵션 번호: 13px -> 3.47vw */
         .options-item-number {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            font-family: var(--font-suit); font-size: 13px; font-weight: 500; color: #9A9A9A; line-height: 1; z-index: 3; 
+            position: static; 
+            font-family: var(--font-suit); 
+            font-size: 3.47vw; 
+            font-weight: 500; 
+            color: #9A9A9A; 
+            line-height: 1; 
+            z-index: 3; 
         }
         
         .options-description { 
@@ -147,11 +152,12 @@
             justify-content: space-between; 
             padding: 0; 
             box-sizing: border-box; 
-            margin-top: 5px; 
+            margin-top: 1.33vw; 
         }
+        /* 옵션 설명: 10px -> 2.67vw */
         .options-description span {
             font-family: var(--font-suit); 
-            font-size: 10px; 
+            font-size: 2.67vw; 
             font-weight: 300; 
             color: var(--sub-text-color);
             width: var(--circle-size); 
@@ -159,26 +165,39 @@
             padding: 0;
         }
 
-        .submit-button-container { width: 100%; display: flex; justify-content: center; margin-top: 30px; padding-bottom: 20px; }
+        /* 버튼 컨테이너: 30px -> 8vw, 20px -> 5.33vw */
+        .submit-button-container { width: 100%; display: flex; justify-content: center; margin-top: 8vw; padding-bottom: 5.33vw; }
+        /* 버튼: 50px -> 13.33vw, 16px -> 4.27vw */
         .submit-button { 
-            width: 90%; height: 50px; background-color: var(--main-text-color); border: none; border-radius: 8px;
-            font-family: var(--font-suit); font-size: 16px; font-weight: 800; color: #FFFFFF; cursor: pointer; text-align: center; 
+            width: 90%; 
+            height: 13.33vw; 
+            background-color: var(--main-text-color); 
+            border: none; 
+            border-radius: 2.13vw; /* 8px -> 2.13vw */
+            font-family: var(--font-suit); 
+            font-size: 4.27vw; 
+            font-weight: 800; 
+            color: #FFFFFF; 
+            cursor: pointer; 
+            text-align: center; 
         }
         
-        .top-quiz-header { width: 100%; display: flex; align-items: center; position: relative; padding-top: 10px; padding-bottom: 30px; }
+        /* 헤더: 10px -> 2.67vw, 30px -> 8vw */
+        .top-quiz-header { width: 100%; display: flex; align-items: center; position: relative; padding-top: 2.67vw; padding-bottom: 8vw; }
         
-        /* 뒤로가기 아이콘: 24px, 300 (얇게) */
+        /* 뒤로가기 아이콘: 24px -> 6.4vw */
         .nav-icon { 
             position: absolute; left: 0; z-index: 5; 
             font-family: var(--font-suit); 
-            font-size: 24px; 
+            font-size: 6.4vw; 
             font-weight: 300; 
             color: var(--main-text-color); line-height: 1; cursor: pointer; 
         }
         
+        /* 페이지 표시: 14px -> 3.73vw */
         .page-indicator { 
             flex-grow: 1; text-align: center; 
-            font-family: var(--font-suit); font-size: 14px; font-weight: 400; 
+            font-family: var(--font-suit); font-size: 3.73vw; font-weight: 400; 
             color: var(--main-text-color); line-height: 1; 
         }
 
@@ -187,8 +206,6 @@
 <body>
     <div class="screen-container">
         
-        <div class="top-bar-background"></div>
-
         <div class="main-content">
             <div class="scroll-content-wrapper">
                 
@@ -205,19 +222,15 @@
                         
                         <div class="options-area-wrapper">
                             <div class="options-item">
-                                <img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button">
                                 <span class="options-item-number">0</span>
                             </div>
                             <div class="options-item">
-                                <img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button">
                                 <span class="options-item-number">1</span>
                             </div>
                             <div class="options-item">
-                                <img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button">
                                 <span class="options-item-number">2</span>
                             </div>
                             <div class="options-item">
-                                <img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button">
                                 <span class="options-item-number">3</span>
                             </div>
                         </div>
@@ -232,10 +245,10 @@
                         <div class="question-number">Q2.</div>
                         <div class="survey-question">물건을 어디에 두었는지 자주 잊어버려 찾는 데 시간을 많이 보낸다.</div>
                         <div class="options-area-wrapper">
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">0</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">1</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">2</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">3</span></div>
+                            <div class="options-item"><span class="options-item-number">0</span></div>
+                            <div class="options-item"><span class="options-item-number">1</span></div>
+                            <div class="options-item"><span class="options-item-number">2</span></div>
+                            <div class="options-item"><span class="options-item-number">3</span></div>
                         </div>
                         <div class="options-description">
                             <span>전혀 아니다</span>
@@ -247,10 +260,10 @@
                         <div class="question-number">Q3.</div>
                         <div class="survey-question">약속 시간이나 마감일을 자주 놓치거나 잊어버린다.</div>
                         <div class="options-area-wrapper">
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">0</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">1</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">2</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">3</span></div>
+                            <div class="options-item"><span class="options-item-number">0</span></div>
+                            <div class="options-item"><span class="options-item-number">1</span></div>
+                            <div class="options-item"><span class="options-item-number">2</span></div>
+                            <div class="options-item"><span class="options-item-number">3</span></div>
                         </div>
                         <div class="options-description">
                             <span>전혀 아니다</span>
@@ -262,10 +275,10 @@
                         <div class="question-number">Q4.</div>
                         <div class="survey-question">중요한 일에 집중하기 어렵고 주변의 작은 자극에도 쉽게 주의가 흐트러진다.</div>
                         <div class="options-area-wrapper">
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">0</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">1</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">2</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">3</span></div>
+                            <div class="options-item"><span class="options-item-number">0</span></div>
+                            <div class="options-item"><span class="options-item-number">1</span></div>
+                            <div class="options-item"><span class="options-item-number">2</span></div>
+                            <div class="options-item"><span class="options-item-number">3</span></div>
                         </div>
                         <div class="options-description">
                             <span>전혀 아니다</span>
@@ -277,10 +290,10 @@
                         <div class="question-number">Q5.</div>
                         <div class="survey-question">방금 읽은 책이나 문서의 내용이 머릿속에 잘 남지 않는다.</div>
                         <div class="options-area-wrapper">
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">0</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">1</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">2</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">3</span></div>
+                            <div class="options-item"><span class="options-item-number">0</span></div>
+                            <div class="options-item"><span class="options-item-number">1</span></div>
+                            <div class="options-item"><span class="options-item-number">2</span></div>
+                            <div class="options-item"><span class="options-item-number">3</span></div>
                         </div>
                         <div class="options-description">
                             <span>전혀 아니다</span>
@@ -292,10 +305,10 @@
                         <div class="question-number">Q6.</div>
                         <div class="survey-question">사람들의 이름이나 얼굴을 기억하는 데 어려움을 느낀다.</div>
                         <div class="options-area-wrapper">
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">0</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">1</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">2</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">3</span></div>
+                            <div class="options-item"><span class="options-item-number">0</span></div>
+                            <div class="options-item"><span class="options-item-number">1</span></div>
+                            <div class="options-item"><span class="options-item-number">2</span></div>
+                            <div class="options-item"><span class="options-item-number">3</span></div>
                         </div>
                         <div class="options-description">
                             <span>전혀 아니다</span>
@@ -307,10 +320,10 @@
                         <div class="question-number">Q7.</div>
                         <div class="survey-question">어제 먹은 점심 메뉴가 잘 떠오르지 않는다.</div>
                         <div class="options-area-wrapper">
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">0</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">1</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">2</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">3</span></div>
+                            <div class="options-item"><span class="options-item-number">0</span></div>
+                            <div class="options-item"><span class="options-item-number">1</span></div>
+                            <div class="options-item"><span class="options-item-number">2</span></div>
+                            <div class="options-item"><span class="options-item-number">3</span></div>
                         </div>
                         <div class="options-description">
                             <span>전혀 아니다</span>
@@ -322,10 +335,10 @@
                         <div class="question-number">Q8.</div>
                         <div class="survey-question">자주 사용하는 비밀번호를 여러 번 틀리곤 한다.</div>
                         <div class="options-area-wrapper">
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">0</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">1</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">2</span></div>
-                            <div class="options-item"><img src="Vector (1).png" alt="옵션 선택 버튼" class="options-image-button"><span class="options-item-number">3</span></div>
+                            <div class="options-item"><span class="options-item-number">0</span></div>
+                            <div class="options-item"><span class="options-item-number">1</span></div>
+                            <div class="options-item"><span class="options-item-number">2</span></div>
+                            <div class="options-item"><span class="options-item-number">3</span></div>
                         </div>
                         <div class="options-description">
                             <span>전혀 아니다</span>
@@ -342,8 +355,6 @@
             </div>
         </div>
         
-        <div class="bottom-navbar"></div>
-        
-    </div>
+        </div>
 </body>
 </html>
