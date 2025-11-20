@@ -2,577 +2,164 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>고정 상하단바 + 자유로운 스크롤 (스크롤 스냅 제거됨)</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>결과 페이지 - 막대 그래프 오버레이 (50% 맞춤 픽셀 복구)</title>
     <style>
-        /* =================================================== */
-        /* 폰트 파일 로드 및 정의 (SUIT 폰트 추가됨) */
-        /* =================================================== */
-        @font-face {
-            font-family: 'HGGGothicssi';
-            src: url('HGGGothicssi_80g.ttf') format('truetype');
-            font-weight: 800; 
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'SUIT';
-            src: url('SUIT-Regular.ttf') format('truetype');
-            font-weight: 400; /* SUIT 기본 굵기 */
-            font-style: normal;
-        }
-        
         /* ------------------------------------------- */
-        /* 전체 화면 기본 설정 - 너비 375px, 고정 높이 2161px 적용 */
+        /* 1. 기본 설정 및 뷰포트 고정 */
         /* ------------------------------------------- */
         html, body {
             margin: 0;
             padding: 0;
-            height: 2161px; /* 2161px 고정 높이 */
-            font-family: 'Apple SD Gothic Neo', 'NanumGothic', 'Malgun Gothic', sans-serif;
-            background-color: #f0f0f0; 
-            overflow-y: auto; 
+            height: 100%; 
+            font-family: sans-serif;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             box-sizing: border-box;
-        }
-
-        #app-container {
-            width: 100%;
-            max-width: 375px; 
-            height: 2161px; /* 2161px 고정 높이 */
-            position: relative;
-            background-color: transparent; 
+            background-color: #ffffff; 
+            overflow: hidden; 
         }
 
         /* ------------------------------------------- */
-        /* 1. 고정 상단바 영역 (높이 102px) */
+        /* 2. 메인 컨테이너 (모바일 뷰포트 역할) */
         /* ------------------------------------------- */
-        #fixed-top-bar {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
+        #result-container {
             width: 100%;
-            max-width: 375px; 
-            height: 102px; 
-            background-image: url('Topbar.jpg'); 
-            background-size: 375px auto; 
-            background-position: center top; 
-            background-repeat: no-repeat;
-            background-color: #fff;
-            z-index: 30; 
-            pointer-events: none; 
-        }
-        
-        /* ------------------------------------------- */
-        /* 2. 고정 하단바 영역 (높이 80px) */
-        /* ------------------------------------------- */
-        #fixed-bottom-bar {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 375px; 
-            height: 80px; 
-            background-image: url('Topbar.jpg');
-            background-size: 375px auto;
-            background-position: center bottom; 
-            background-repeat: no-repeat;
-            background-color: #000;
-            z-index: 30; 
-            pointer-events: none; 
-        }
-
-        /* ------------------------------------------- */
-        /* 3. 스크롤 콘텐츠 영역 (스크롤 스냅 제거됨) */
-        /* ------------------------------------------- */
-        .content-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 375px; 
-            height: 2161px; 
-            overflow-y: auto;  
-            background-color: white; 
-            z-index: 20;
+            max-width: 375px; /* 모바일 기기 너비 제한 유지 */
+            height: 100%;
+            position: relative; /* 절대 위치 요소의 기준점 */
+            background-color: #ffffff; 
+            overflow-y: auto; /* 스크롤 활성화 */
+            -webkit-overflow-scrolling: touch;
             
-            padding-top: 103px;    
-            padding-bottom: 150px; 
-            
-            box-sizing: border-box;
-            
-            border-left: 1px solid #ddd; 
-            border-right: 1px solid #ddd;
-
+            /* 스크롤바 숨기기 */
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        .content-wrapper::-webkit-scrollbar { display: none; }
         
-        
-        /* ------------------------------------------- */
-        /* New Group Margins */
-        /* ------------------------------------------- */
-        .group-2 { margin-top: 30px; } 
-
-
-        /* ------------------------------------------- */
-        /* 6. 로고 영역 스타일 */
-        /* ------------------------------------------- */
-        .logo-area {
-            text-align: center;
-            padding: 15px 0; 
-        }
-        .logo-area img {
-            width: 291.19px; 
-            height: 74.2px;  
-        }
-
-
-        /* ------------------------------------------- */
-        /* 박스 스타일 (내가 까먹은 원인은? 섹션) */
-        /* ------------------------------------------- */
-        .result-box {
-            width: 337px; 
-            height: 380px; 
-            box-sizing: border-box; 
-            margin: 0 19px 30px 19px; 
-            border: 1px solid #ccc; 
-            border-radius: 5px;
-            background-color: #fff;
-            padding: 0 20px 20px 20px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            overflow-y: hidden; 
-        }
-
-        /* ------------------------------------------- */
-        /* 심플 구분선 스타일 (내가 까먹은 원인은? 밑 선분) */
-        /* ------------------------------------------- */
-        .simple-separator {
-            height: 1px;
-            background-color: #9A9A9A; 
-            margin: 0 -20px; 
+        #result-container::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
         }
         
         /* ------------------------------------------- */
-        /* 4. 제목 스타일 */
+        /* 3. 콘텐츠 영역 및 이미지 스타일 */
         /* ------------------------------------------- */
-        .title-section {
-            display: flex;
-            align-items: center; 
-            justify-content: center; 
-            padding: 5px 0; 
-        }
-        .title-section h3 {
-            font-family: 'HGGGothicssi', 'Apple SD Gothic Neo', sans-serif; 
-            font-size: 17px; 
-            letter-spacing: -0.025em; 
-            font-weight: 800; 
-            margin: 0 5px; 
-            color: #333;
-        }
-        .star-group { display: flex; align-items: center; }
-        .star-group img { height: auto; margin: 0 1px; }
         
-        /* 별 크기 설정 유지 */
-        .title-section .star-group:first-child img:nth-child(odd) { width: 10.03px; height: 10.03px; }
-        .title-section .star-group:first-child img:nth-child(even) { width: 19.56px; height: 19.56px; }
-        .title-section .star-group:last-child img:nth-child(odd) { width: 19.56px; height: 19.56px; }
-        .title-section .star-group:last-child img:nth-child(even) { width: 10.03px; height: 10.03px; }
-        
-        .title-group { 
-            margin-top: 0; 
-            margin-bottom: 10px; 
-        }
-
-
-        /* ------------------------------------------- */
-        /* digital-header 스타일 */
-        /* ------------------------------------------- */
-        .digital-header { 
-            font-size: 18px; 
-            font-weight: bold; 
-            text-align: center; 
-            margin: 0 0 30px 0; 
-            padding: 0 16px;
-            border-top: none; 
-            background-color: transparent; 
-            border-radius: 0; 
-        }
-
-
-        /* ------------------------------------------- */
-        /* 기타 박스 외부 콘텐츠 스타일 (좌우 16px 패딩/마진으로 통일) */
-        /* ------------------------------------------- */
-        .result-description,
-        .stats-section {
-            padding: 0 16px; 
-        }
-        
-        /* suggestion-section 패딩 유지 */
-        .suggestion-section {
-            padding: 0 16px; 
-            margin-top: 101px; 
-        }
-        
-        /* Warning.png 이미지 컨테이너 */
-        .warning-image-container {
-            text-align: center; 
-            margin: 120px 16px 20px 16px; 
-        }
-        .warning-image-container img {
+        /* 결과 이미지 스타일 */
+        .result-image {
             width: 100%; 
-            height: 74.2px; 
+            height: auto;
+            display: block;
         }
-
-        /* 하단 버튼 영역 (스타일 유지) */
-        .scrollable-bottom-buttons { 
-            margin: 20px 0 0 0; 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 15px 10px; 
-            background-color: transparent; 
-            align-items: center; 
-        }
-
-        /* 개별 버튼 기본 스타일 (유지) */
-        .action-button {
-            width: 169px; 
-            height: 56px; 
+        
+        /* ------------------------------------------- */
+        /* 4. 막대 그래프 섹션 스타일 (절대 위치 오버레이 - 픽셀 단위) */
+        /* ------------------------------------------- */
+        
+        .stat-section {
+            /* Y 위치 993.5px 고정 */
+            position: absolute;
+            top: 993.5px; 
+            left: 0;
+            width: 100%; 
             box-sizing: border-box;
-            text-decoration: none;
-            text-align: center;
-            padding: 17.5px 10px; 
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 2px; 
-            transition: background-color 0.2s;
-            flex-shrink: 0; 
-        }
-        .white-button {
-            background-color: #fff;
-            color: #000; 
-            border: 1px solid #000; 
-            margin-right: 5px; 
-        }
-        .black-button {
-            background-color: #000; 
-            color: #fff !important; 
-            border: 1px solid #000; 
-            margin-left: 5px; 
-        }
-        .divider { display: none; } 
-        .highlight-text { color: #fff !important; } 
-
-        /* ------------------------------------------- */
-        /* Suggestion 섹션 내부 스타일 */
-        /* ------------------------------------------- */
-        .suggestion-title { 
-            font-family: 'HGGGothicssi', 'Apple SD Gothic Neo', sans-serif; 
-            font-size: 26px; 
-            font-weight: 800; 
-            letter-spacing: -0.02em; 
-            text-align: left; 
-            margin-bottom: 10px; 
+            /* X 위치 108px 고정 */
+            padding-left: 108px; 
+            /* 🚨 막대 100% 길이 조정: 45px로 복구 (50%를 맞추기 위해 조정했던 값) */
+            padding-right: 45px; 
         }
         
-        /* 부제목 기본 스타일: SUIT 14px, Light (300) 적용 */
-        .suggestion-subtitle { 
-            font-family: 'SUIT', 'Apple SD Gothic Neo', sans-serif;
-            font-size: 14px; 
-            font-weight: 300; /* Light */
-            color: #666; 
-            text-align: left; 
-            margin-bottom: 25px; 
-        }
-        
-        /* 부제목 중 Bold 텍스트 스타일: SUIT 14px, Bold (700), 자간 -2.5% 적용 */
-        .suggestion-subtitle .bold-text {
-            font-weight: 700; /* Bold */
-            letter-spacing: -0.025em; /* 자간 -2.5% */
-        }
-
-
-        /* Vertical/Horizontal position adjustments (그룹핑과 별개로 위치 보정) */
-        .food-composition { 
-            margin: 20px 0; 
-            margin-top: 77.95px; 
-        } 
-        
-        .composition-item:nth-child(1) {
-            margin-bottom: 52.05px; 
-        }
-        .composition-item:nth-child(1) .composition-icon-container {
-            margin-right: 40.04px; 
-        }
-
-        .composition-item:nth-child(2) {
-            margin-bottom: 51px; 
-        }
-        .composition-item:nth-child(2) .composition-icon-container {
-            margin-right: 40px; 
-        }
-        
-        .composition-item:nth-child(3) .composition-icon-container {
-            margin-right: 38px; 
-        }
-
-
-        /* Composition Item: 아이콘 + 텍스트를 상단 정렬 */
-        .composition-item { 
-            display: flex; 
-            align-items: flex-start; 
-            margin-bottom: 20px; 
-        }
-
-        /* 아이콘 컨테이너: 가장 큰 아이콘 크기(67.89px)를 수용하도록 크기 조정 */
-        .composition-icon-container { 
-            width: 70px; 
-            height: 70px; 
-            text-align: left; 
+        .stat-item {
+            height: 5px; /* 막대 굵기 5px 고정 */
+            margin-bottom: 95px; /* 막대 간격 100px 유지 */
+            position: relative; 
             display: flex;
             align-items: center;
-            justify-content: left;
+            box-sizing: border-box;
+            /* 🚨 퍼센트 숫자 공간 확보: 45px로 복구 */
+            padding-right: 45px; 
         }
-        /* 이미지: 개별 크기 지정 */
-        .composition-icon-container img {
-            object-fit: contain; 
-        }
-
-        /* 개별 이미지 크기 지정 (nth-child 순서가 올바르게 적용됨) */
-        /* 1번: QuestionVector.png */
-        .composition-item:nth-child(1) .composition-icon-container img { 
-            width: 67.89px; 
-            height: 67.89px; 
-        }
-        /* 2번: Union.png */
-        .composition-item:nth-child(2) .composition-icon-container img {
-            width: 48.01px; 
-            height: 48px; 
-        }
-        /* 3번: Union2.png */
-        .composition-item:nth-child(3) .composition-icon-container img {
-            width: 61.74px; 
-            height: 61.74px;
+        
+        /* 막대 그래프 컨테이너 */
+        .bar-container {
+            flex-grow: 1;
+            height: 100%; 
+            background-color: transparent; 
+            border-radius: 2.5px; 
+            overflow: hidden;
+            position: relative; 
         }
 
-
-        /* 텍스트 스타일 */
-        .composition-text .title { 
-            font-family: 'SUIT', 'Apple SD Gothic Neo', sans-serif; /* SUIT 폰트 적용 */
-            font-size: 15px; 
-            font-weight: bold; 
-            margin-top: 0; 
+        /* 실제 채워지는 막대 */
+        .bar {
+            height: 100%;
+            width: 0%; 
+            border-radius: 2.5px; 
+            transition: width 0.5s ease-out;
         }
-        .composition-text .description { 
-            font-family: 'SUIT', 'Apple SD Gothic Neo', sans-serif; /* SUIT 폰트 적용 */
+
+        /* 퍼센트 숫자 스타일 */
+        .score-info {
+            position: absolute;
+            top: 50%; 
+            right: 0; 
+            transform: translateY(-50%); 
             font-size: 13px; 
-            font-weight: 300; /* Light 적용 */
-            color: #666; 
-            line-height: 1.4; 
-        }
-        
-        /* ------------------------------------------- */
-        /* 기타 스타일 유지 */
-        /* ------------------------------------------- */
-        .result-description p { 
-            margin: 10px 0; 
-            font-size: 14px; 
-            line-height: 1.6; 
-            color: #555;
-            font-family: 'SUIT', 'Apple SD Gothic Neo', sans-serif;
-            letter-spacing: -0.025em; 
-        }
-        .result-description strong { color: #ffcc00; }
-        
-        hr { 
-            border:0; 
-            border-top:1px solid #eee; 
-            margin:50px 0 0 0; 
-        }
-        
-        /* 통계 섹션 (Stats Section) 관련 스타일 - 이전 코드 그대로 유지 */
-        .stats-section { margin-top: 30px; }
-        .stat-item { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; }
-        .stat-content { display: flex; flex-direction: column; align-items: flex-start; width: 80%; }
-        .stat-graphic-text { margin-bottom: 5px; height: 56.84px; display: flex; align-items: center; }
-        .stat-graphic-text img { height: 100%; width: auto; object-fit: contain; }
-        .stat-item:nth-child(1) .stat-graphic-text img { width: 225.68px; }
-        .stat-item:nth-child(2) .stat-graphic-text img { width: 193.2px; }
-        .stat-item:nth-child(3) .stat-graphic-text img { width: 227.3px; }
-        .stat-item:nth-child(4) .stat-graphic-text img { width: 132.34px; }
-        .stat-label-text { font-size: 14px; color: #333; margin-bottom: 5px; font-weight: 500; }
-        .progress-bar-container { width: 100%; height: 3px; background-color: #e0e0e0; }
-        .progress-bar { height: 100%; background-color: #9A9A9A; }
-        .stat-item:nth-child(1) .progress-bar { background-color: #ffcc00; }
-        .stat-value { width: 20%; text-align: right; font-size: 16px; font-weight: bold; color: #333; }
-        
-        /* 선택지 카드 스타일 */
-        .choices-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-            margin-bottom: 30px; 
-            padding: 0; 
-        }
-        .choice-card { padding: 15px 10px; text-align: center; border-radius: 5px; border: none; background-color: transparent; transition: all 0.2s; }
-        .choice-card.selected { border: none; background-color: transparent; }
-        .icon-img { display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
-        
-        /* 두 번째 줄 카드 상단 마진 줄이기 */
-        .choices-grid .choice-card:nth-child(3),
-        .choices-grid .choice-card:nth-child(4) {
-            margin-top: -10px; 
+            font-weight: 700; 
+            color: #161317; 
+            text-align: right;
+            /* 🚨 퍼센트 숫자 공간: 45px로 복구 */
+            width: 45px; 
         }
 
-        .choices-grid .choice-card:nth-child(1) .icon-img img { width: 116.57px; height: 116.57px; }
-        .choices-grid .choice-card:nth-child(2) .icon-img img { width: 123.24px; height: 118.6px; }
-        .choices-grid .choice-card:nth-child(3) .icon-img img { width: 116.57px; height: 116.57px; }
-        .choices-grid .choice-card:nth-child(4) .icon-img img { width: 116.57px; height: 116.57px; }
-        
-        .choice-card p { 
-            font-size: 13px; 
-            margin: 3px 0; 
-            font-weight: 500; 
-        }
-
-        /* "가성치매"와 "알콜성 블랙아웃" 텍스트에 선분 추가 */
-        .choices-grid .choice-card:nth-child(3) p:first-child { 
-            border-bottom: 1px solid #9A9A9A; 
-            padding-bottom: 2px; 
-            margin-bottom: 5px; 
-            display: inline-block;
-        }
-        .choices-grid .choice-card:nth-child(4) p:first-child { 
-            border-bottom: 1px solid #9A9A9A; 
-            padding-bottom: 2px; 
-            margin-bottom: 5px; 
-            display: inline-block;
-        }
+        /* 색상 정의 */
+        .yellow-bar { background-color: #FFD600; } 
+        .purple-bar { background-color: #A9A9A9; } 
+        .pink-bar { background-color: #A9A9A9; } 
+        .green-bar { background-color: #A9A9A9; } 
 
     </style>
 </head>
-
 <body>
-    <div id="app-container">
-
-        <div id="fixed-top-bar">
+    <div id="result-container">
+        
+        <img src="Image/결과1_디지털.svg" alt="디지털 과부하 결과 이미지" class="result-image">
+        
+        <div class="stat-section">
+            
+            <div class="stat-item">
+                <div class="bar-container">
+                    <div class="bar yellow-bar" style="width: 50%;"></div>
+                </div>
+                <span class="score-info">50%</span>
+            </div>
+            
+            <div class="stat-item">
+                <div class="bar-container">
+                    <div class="bar purple-bar" style="width: 20%;"></div>
+                </div>
+                <span class="score-info">20%</span>
+            </div>
+            
+            <div class="stat-item">
+                <div class="bar-container">
+                    <div class="bar pink-bar" style="width: 75%;"></div>
+                </div>
+                <span class="score-info">75%</span>
+            </div>
+            
+            <div class="stat-item">
+                <div class="bar-container">
+                    <div class="bar green-bar" style="width: 40%;"></div>
+                </div>
+                <span class="score-info">40%</span>
+            </div>
+            
         </div>
-
-        <div class="content-wrapper">
-            
-            <div class="group-1">
-                
-                <div class="logo-area">
-                    <img src="camocamoLogo.png" alt="카모카모 로고">
-                </div>
-                
-                <div class="result-box"> 
-                    
-                    <div class="title-group">
-                        <div class="title-section">
-                            <div class="star-group"><img src="inboxsmallstar.png" alt="별1"><img src="inboxbigstar.png" alt="별2"><img src="inboxsmallstar.png" alt="별3"><img src="inboxbigstar.png" alt="별4"></div>
-                            <h3>내가 까먹은 원인은?</h3>
-                            <div class="star-group"><img src="inboxbigstar.png" alt="별1"><img src="inboxsmallstar.png" alt="별2"><img src="inboxbigstar.png" alt="별3"><img src="inboxsmallstar.png" alt="별4"></div>
-                        </div>
-                        <div class="simple-separator"></div>
-                    </div>
-
-                    <div class="choices-grid">
-                        <div class="choice-card selected"><div class="icon-img"><img src="digitalGwasiyong.png" alt="디지털 과사용"></div><p>디지털 과사용</p></div>
-                        <div class="choice-card"><div class="icon-img"><img src="bulgyuchik.png" alt="불규칙 수면"></div><p>불규칙 수면</p></div>
-                        <div class="choice-card"><div class="icon-img"><img src="Chimae.png" alt="가성 치매"></div><p>가성 치매</p></div>
-                        <div class="choice-card"><div class="icon-img"><img src="Blackout.png" alt="알콜성 블랙아웃"></div><p>알콜성 블랙아웃</p></div>
-                    </div>
-                </div>
-                <div class="digital-header">디지털 과사용</div>
-
-            </div>
-            
-            <div class="group-2">
-                
-                <div class="warning-image-container">
-                    <img src="Warning.png" alt="경고 이미지">
-                </div>
-                
-                <div class="result-description">
-                    <p>디지털 과부하로 뇌 신경에 자극과 손상을 가하고 있어요.</p>
-                    <p>지금은 <strong>디지털</strong>을 잠시 내려놓고, 손으로 기억을 붙잡는 루틴이 필요한 때입니다.</p>
-                </div>
-
-                <div class="stats-section">
-                    <div class="stat-item"><div class="stat-content"><div class="stat-graphic-text"><img src="Digital.png" alt="DIGITAL"></div><div class="stat-label-text">디지털 과사용</div><div class="progress-bar-container"><div class="progress-bar" style="width: 56%;"></div></div></div><div class="stat-value">56%</div></div>
-                    <div class="stat-item"><div class="stat-content"><div class="stat-graphic-text"><img src="Sleep.png" alt="SLEEP"></div><div class="stat-label-text">불규칙 수면</div><div class="progress-bar-container"><div class="progress-bar" style="width: 23%;"></div></div></div><div class="stat-value">23%</div></div>
-                    <div class="stat-item"><div class="stat-content"><div class="stat-graphic-text"><img src="Stress.png" alt="STRESS"></div><div class="stat-label-text">가성 치매</div><div class="progress-bar-container"><div class="progress-bar" style="width: 40%;"></div></div></div><div class="stat-value">40%</div></div>
-                    <div class="stat-item"><div class="stat-content"><div class="stat-graphic-text"><img src="Film.png" alt="FILM"></div><div class="stat-label-text">알콜성 블랙아웃</div><div class="progress-bar-container"><div class="progress-bar" style="width: 20%;"></div></div></div><div class="stat-value">20%</div></div>
-                </div>
-
-            </div>
-            <hr>
-
-            <div class="group-3">
-                
-                <div class="suggestion-section">
-                    <h2 class="suggestion-title">건강기능식품을 <br>재미있게 까먹자</h2>
-                    
-                    <p class="suggestion-subtitle">
-                        현대인의 일상 속 다양한 ‘까먹는 순간’에<br>
-                        <span class="bold-text">건강을 쉽고 재밌게 챙기는 새로운 루틴</span>을 제안합니다.
-                    </p>
-
-                    <div class="food-composition"> 
-                        
-                        <div class="composition-item">
-                            <div class="composition-icon-container"><img src="QuestionVector.png" alt="질문 아이콘"></div>
-                            <div class="composition-text">
-                                <div class="title">2030세대의 건망증</div> 
-                                <div class="description">
-                                    젊은 세대에서 기억력 저하를 호소하는<br>
-                                    이들이 늘어나면서 ‘영츠하이머’라는 용어가 등장
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="composition-item">
-                            <div class="composition-icon-container"><img src="Union.png" alt="건강기능식품 아이콘"></div>
-                            <div class="composition-text">
-                                <div class="title">건강기능식품</div>
-                                <div class="description">
-                                    뇌에 좋은 성분을 이용해<br>
-                                    건망증 원인별 건강기능식품을 구성
-                                </div>
-                            </div>
-                        </div>
-
-                        
-                        <div class="composition-item">
-                            <div class="composition-icon-container"><img src="Union2.png" alt="콜래팅 아이콘"></div>
-                            <div class="composition-text">
-                                <div class="title">콜래팅</div>
-                                <div class="description">
-                                    기존에 기능만 중시했던 건강기능식품을<br>
-                                    ‘플레잇팅’으로 재미있게
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-
-                <div class="scrollable-bottom-buttons">
-                    <a href="#" class="action-button white-button">테스트 다시하기</a>
-                    <a href="#" class="action-button black-button">제품 구경하기</a>
-                </div>
-
-            </div>
-            </div>
-
-        <div id="fixed-bottom-bar">
-            </div>
-
+        
     </div>
 </body>
 </html>
