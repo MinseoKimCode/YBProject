@@ -343,7 +343,7 @@
             
             // 🚨🚨🚨 다중 페이지 관리를 위한 변수 🚨🚨🚨
             const currentPageId = 'page4';
-            const nextPageUrl = 'test_Result.html'; // 최종 결과 페이지 URL을 'result.html'로 가정
+            const nextPageUrl = 'test_Result.html'; 
             const prevPageUrl = 'test_page3.html'; // 이전 페이지 URL
             const totalPages = 4;
             // 🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
@@ -531,7 +531,7 @@
 
                 // 1. 현재 페이지의 선택된 답변을 최종 저장
                 quizAnswers[currentPageId] = answers;
-                localStorage.setItem('quizAnswers', JSON.JSON.stringify(quizAnswers));
+                localStorage.setItem('quizAnswers', JSON.stringify(quizAnswers)); // 🌟 JSON.JSON.stringify에서 수정됨
 
                 // 2. 최종 점수 계산
                 const finalScores = calculateTotalScores();
