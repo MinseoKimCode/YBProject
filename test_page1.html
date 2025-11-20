@@ -433,6 +433,17 @@
                     calculateTotalScores();
                 });
             });
+            
+            // =========================================================================
+            // 4. 이벤트 핸들러: "<" 아이콘 클릭 시 (추가된 부분)
+            // =========================================================================
+            const navIcon = document.querySelector('.nav-icon');
+            navIcon.addEventListener('click', () => {
+                // index.html로 페이지 이동
+                window.location.href = 'index.html';
+            });
+            // =========================================================================
+
 
             // "다음 단계" 버튼 클릭 이벤트
             const submitButton = document.querySelector('.submit-button');

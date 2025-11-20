@@ -112,18 +112,6 @@
             width: 100%; 
         }
         
-        /* Q12 힌트 텍스트 스타일 */
-        .question-hint {
-            font-family: var(--font-suit); 
-            font-weight: 400; /* Regular */
-            font-size: 2.67vw; /* 10px */
-            letter-spacing: -0.003em; /* -0.3% */
-            color: var(--sub-text-color);
-            display: block; 
-            margin-top: 0.5vw;
-            line-height: 1.4;
-        }
-
         /* .survey-question-block의 width: 100%는 .main-content의 5.2vw 패딩 덕분에 336px이 됨 */
         .survey-question-block { width: 100%; margin-bottom: 5.33vw; padding: 5.33vw; border: 0.5px solid var(--line-color); border-radius: 2.13vw; background-color: #FFFFFF; box-sizing: border-box; box-shadow: 0 0.267vw 0.8vw rgba(0,0,0,0.05); }
         .options-area-wrapper { position: relative; height: var(--circle-size); width: 100%; display: flex; justify-content: space-between; padding: 0; box-sizing: border-box; margin-bottom: 4vw; }
@@ -204,13 +192,14 @@
                 
                 <div class="top-quiz-header">
                     <div class="nav-icon">&lt;</div>
-                    <div class="page-indicator">3 / 4</div> </div>
+                    <div class="page-indicator">3 / 4</div>
+                </div>
                 
                 <div class="survey-content">
                     
                     <div class="survey-question-block" data-question-id="Q17">
                         <div class="question-number">Q17.</div>
-                        <div class="survey-question">최근 한 달간, 스마트폰/인터넷 사용 때문에 집안일, 업무, 학업 등을 소홀히 한 적이 있나요?</div>
+                        <div class="survey-question">스마트폰이나 인터넷을 사용하고 나서 후회하거나 자책한 적이 있나요?</div>
                         
                         <div class="options-area-wrapper">
                             <div class="options-item" data-value="0">
@@ -235,7 +224,7 @@
                     
                     <div class="survey-question-block" data-question-id="Q18">
                         <div class="question-number">Q18.</div>
-                        <div class="survey-question">최근 2주 동안, 평소 좋아하던 일에도 재미나 흥미를 느끼지 못한 적이 얼마나 자주 있습니까?</div>
+                        <div class="survey-question">최근 한 달 동안, 신경이 예민해지거나 짜증이 난 적이 얼마나 자주 있습니까?</div>
                         <div class="options-area-wrapper">
                             <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
                             <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
@@ -250,7 +239,7 @@
                     
                     <div class="survey-question-block" data-question-id="Q19">
                         <div class="question-number">Q19.</div>
-                        <div class="survey-question">오후에 휴식을 취하기 위해 누웠을 때, 나도 모르게 깜빡 잠이 드는 경우가 얼마나 자주 있나요?</div>
+                        <div class="survey-question">쉬는 시간에 누워서 쉴 때, 잠이 드는 경우가 있나요?</div>
                         <div class="options-area-wrapper">
                             <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
                             <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
@@ -265,7 +254,7 @@
 
                     <div class="survey-question-block" data-question-id="Q20">
                         <div class="question-number">Q20.</div>
-                        <div class="survey-question">음주 문제로 인해 가족, 친구, 직장 동료 등과 갈등을 겪거나 지적을 받은 적이 있습니까?</div>
+                        <div class="survey-question">술을 마시는 것 때문에 가족, 친구, 직장 동료와의 관계에서 어려움을 겪은 적이 있나요?</div>
                         <div class="options-area-wrapper">
                             <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
                             <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
@@ -280,7 +269,7 @@
                     
                     <div class="survey-question-block" data-question-id="Q21">
                         <div class="question-number">Q21.</div>
-                        <div class="survey-question">인터넷이나 스마트폰 사용을 강제로 중단해야 할 때, 초조함이나 짜증을 느끼나요?</div>
+                        <div class="survey-question">스마트폰이나 인터넷을 사용하지 않을 때, 불안하거나 우울함을 느끼나요?</div>
                         <div class="options-area-wrapper">
                             <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
                             <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
@@ -295,7 +284,7 @@
                     
                     <div class="survey-question-block" data-question-id="Q22">
                         <div class="question-number">Q22.</div>
-                        <div class="survey-question">최근 2주 동안, 심한 피로감을 느끼거나 기력이 없다고 느낀 적이 얼마나 자주 있습니까?</div>
+                        <div class="survey-question">최근 2주 동안, 어떤 일에도 흥미나 즐거움을 느끼지 못한 적이 얼마나 자주 있습니까?</div>
                         <div class="options-area-wrapper">
                             <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
                             <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
@@ -310,7 +299,7 @@
                     
                     <div class="survey-question-block" data-question-id="Q23">
                         <div class="question-number">Q23.</div>
-                        <div class="survey-question">TV를 시청하거나 회의,강의 등 앉아 있는 중에 졸음을 느끼는 경우가 있나요?</div>
+                        <div class="survey-question">차를 타고 1시간 이상 계속 앉아 있을 때, 잠이 드는 경우가 있나요?</div>
                         <div class="options-area-wrapper">
                             <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
                             <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
@@ -325,7 +314,7 @@
                     
                     <div class="survey-question-block" data-question-id="Q24">
                         <div class="question-number">Q24.</div>
-                        <div class="survey-question">한 번에 많은 양의 술을 마신 다음 날, 기억이 나지 않았던 적이 있습니까? </div>
+                        <div class="survey-question">최근 한 달간, 술을 끊거나 줄여야겠다고 생각했지만 실천하지 못한 적이 있습니까?</div>
                         <div class="options-area-wrapper">
                             <div class="options-item" data-value="0"><img src="Image/기본버튼0.svg" alt="옵션 0 버튼"></div>
                             <div class="options-item" data-value="1"><img src="Image/기본버튼1.svg" alt="옵션 1 버튼"></div>
@@ -353,12 +342,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             // 🚨🚨🚨 다중 페이지 관리를 위한 변수 🚨🚨🚨
-            const currentPageId = 'page3'; // 🚨 'page3'으로 수정됨
-            const nextPageUrl = 'test_page4.html'; // 🚨 'test_page4.html'으로 수정됨
+            const currentPageId = 'page3';
+            const nextPageUrl = 'test_page4.html'; 
+            const prevPageUrl = 'test_page2.html'; // 🚨 이전 페이지 URL 수정
             const totalPages = 4;
             // 🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
 
-            // 질문 ID에 따른 선택 버튼 색상 매핑 (Q1-Q24 전체 매핑 포함)
+            // 질문 ID에 따른 선택 버튼 색상 매핑 (Q1-Q32 전체 매핑 포함)
             const colorMap = {
                 // Page 1 (Q1-Q8)
                 'Q1': '노란', 'Q5': '노란',
@@ -370,17 +360,22 @@
                 'Q10': '보라', 'Q15': '보라',
                 'Q11': '핑크', 'Q14': '핑크',
                 'Q12': '초록', 'Q16': '초록',
-                // Page 3 (Q17-Q24) 🚨 새로 추가됨
+                // Page 3 (Q17-Q24) 🚨 현재 페이지 매핑
                 'Q17': '노란', 'Q21': '노란',
                 'Q19': '보라', 'Q23': '보라', 
                 'Q18': '핑크', 'Q22': '핑크', 
                 'Q20': '초록', 'Q24': '초록',
+                // Page 4 (Q25-Q32)
+                'Q25': '노란', 'Q29': '노란', 
+                'Q27': '보라', 'Q31': '보라', 
+                'Q26': '핑크', 'Q30': '핑크', 
+                'Q28': '초록', 'Q32': '초록', 
             };
 
             const options = document.querySelectorAll('.options-item');
             const pageIndicator = document.querySelector('.page-indicator');
             
-            // UI의 페이지 번호 업데이트 (3 / 4)
+            // UI의 페이지 번호 업데이트
             pageIndicator.textContent = `${currentPageId.replace('page', '')} / ${totalPages}`;
 
             // localStorage에서 전체 답변을 로드하거나, 없으면 빈 객체로 초기화
@@ -505,9 +500,19 @@
                     calculateTotalScores();
                 });
             });
+
+            // =========================================================================
+            // 4. 이벤트 핸들러: "<" 아이콘 클릭 시 (🚨 이전 페이지로 이동)
+            // =========================================================================
+            const navIcon = document.querySelector('.nav-icon');
+            navIcon.addEventListener('click', () => {
+                // test_page2.html로 페이지 이동
+                window.location.href = prevPageUrl;
+            });
+            // =========================================================================
             
             // =========================================================================
-            // 4. 이벤트 핸들러: "다음 단계" 버튼 클릭 시
+            // 5. 이벤트 핸들러: "다음 단계" 버튼 클릭 시
             // =========================================================================
             const submitButton = document.querySelector('.submit-button');
             submitButton.addEventListener('click', () => {
@@ -515,12 +520,6 @@
                 quizAnswers[currentPageId] = answers;
                 localStorage.setItem('quizAnswers', JSON.stringify(quizAnswers));
 
-                // 최종 누적 점수를 계산합니다.
-                const finalScores = calculateTotalScores();
-                
-                // 최종 결과 페이지에서 사용할 수 있도록 별도로 저장
-                localStorage.setItem('totalQuizScores', JSON.stringify(finalScores));
-                
                 // 다음 페이지로 이동
                 window.location.href = nextPageUrl;
             });
